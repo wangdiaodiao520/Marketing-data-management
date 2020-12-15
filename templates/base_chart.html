@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block dis %}
+    <style type="text/css">
+    #main_content{
+        display: none;
+    }
+    .page{
+        width: 1500px;
+    }
+    .page-header .left{
+        width: 100%;
+    }
+    </style>
+{% endblock %}
+{% block serch %}
+    <form method="post" action="/get_charts/" class="input-group" style="width: 600px">
+        <input class="form-control" type="date" id="txt" value="开始时间" name="start" />
+        <input class="form-control" type="date" id="txt" value="结束时间" name="end"/>
+        <select class="form-control" name="channel" >
+            <option  value='' style="display: none;">渠道</option>
+            {% for k,v in channels.items %}
+            <option value={{ k }}>{{ v }}</option>
+            {% endfor %}
+        </select>
+        {% if request.session.user_limit == 1 %}
+            <button class="btn btn-outline-secondary" value="{{ request.session.user_id }}" name="sale">提交</button>
+        {% else %}
+        {% if request.session.user_limit >= 9 %}
+        <select class="form-control" name="sale" >
+            <option  value='' style="display: none;">咨询人</option>
+            {% for k,v in consult.items %}
+            <option value={{ k }}>{{ v }}</option>
+            {% endfor %}
+        </select>
+            <button class="btn btn-outline-secondary">提交</button>
+        {% else %}
+            <button class="btn btn-outline-secondary" value="{{ request.session.user_limit }}" name="sale">提交</button>
+        {% endif %}
+        {% endif %}
+    </form>
+{% endblock %}
+{% block title %}可视化{% endblock %}
+{% block left_frame_add %}
+    <li><a href="/index/"><i class="fa fa-credit-card"></i><span>回到主页</span></a></li>
+{% endblock %}
+{% block table %}
+    {{ turnover_time_bar|safe }}
+    <br>
+    {{ arrive_order_time_line|safe }}
+    <br>
+    {{ turnover_channel_pie|safe }}
+    <br>
+    {% if request.session.user_limit != 2 %}
+    {{ turnover_sale_pie|safe }}
+    <br>
+    {{ arrive_sale_pie|safe }}
+    <br>
+    {{ order_sale_pie|safe }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}对话提交{% endblock %}
+{% block left_frame_add %}
+    <li><a href="/index/"><i class="fa fa-credit-card"></i><span>回到主页</span></a></li>
+{% endblock %}
+{% block add_work %}
+    <ul class="nav nav-pills">
+        <li class="nav-item dropdown">
+            <button style="padding: 5px;background: transparent;border-radius: 10px" id="add_swt_dh">商务通-对话</button>
+        </li>
+    </ul>
+{% endblock %}
+{% block page_title %}
+    <h1 class="page-title">商务通-对话</h1>
+{% endblock %}
+{% block js %}
+    <script>
+    $(document).ready(function () {
+          $('#add_swt_dh').click(function () {
+              var time = new Date();
+              var day = ("0" + time.getDate()).slice(-2);
+              var month = ("0" + (time.getMonth() + 1)).slice(-2);
+              var today = time.getFullYear() + "-" + (month) + "-" + (day);
+              var lable= "<form method=\"post\" action=\"/add_talk/\" target=\"iframe_data\">\n" +
+                  "                                <table class=\"table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap\">\n" +
+                  "                                    <tr>\n" +
+                  "                                        <td><input style=\"width:100px;padding: 5px;background: transparent;border-radius: 10px\" required=\"required\" name=\"swt_date\" value=\""+ today+"\"></td>\n" +
+                  "                                        <td><select style=\"padding: 5px;background: transparent;border-radius: 10px\" name=\"swt_xm\" >\n" +
+                  "                                            <option value=\"\" style=\"display: none;\">项目</option>\n" +
+                  "                                            <option value=3>种植</option>\n" +
+                  "                                            <option value=4>矫正</option>\n" +
+                  "                                            <option value=5>贴面</option>\n" +
+                  "                                            <option value=6>小病种</option>\n" +
+                  "                                        </select></td>\n" +
+                  "                                        <td><input style=\"width:100px;padding: 5px;background: transparent;border-radius: 10px\" required=\"required\" name=\"swt_a\" placeholder=\"总对话\"></td>\n" +
+                  "                                        <td><input style=\"width:100px;padding: 5px;background: transparent;border-radius: 10px\" required=\"required\" name=\"swt_b\" placeholder=\"有效对话\"></td>\n" +
+                  "                                        <td><input style=\"width:100px;padding: 5px;background: transparent;border-radius: 10px\" required=\"required\" name=\"swt_c\" placeholder=\"留电\"></td>\n" +
+                  "                                        <td><input style=\"width:100px;padding: 5px;background: transparent;border-radius: 10px\" required=\"required\" name=\"swt_d\" placeholder=\"有效留电\"></td>\n" +
+                  "                                        <td><button style=\"padding: 5px;background: transparent;border-radius: 10px\" name=\"sale_id\" value=\"{{ request.session.user_id }}\">提交</button></td>\n" +
+                  "                                    </tr>\n" +
+                  "                                </table>\n" +
+                  "                            </form>";
+              $('#table').append(lable)
+          })
+      })
+    </script>
+{% endblock %}

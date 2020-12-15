@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% block title %}表单统计{% endblock %}
+{% block left_frame_add %}
+    <li><a href="/index/"><i class="fa fa-credit-card"></i><span>回到主页</span></a></li>
+{% endblock %}
+{% block add_work %}
+    <h1 class="page-title">月度统计</h1>
+{% endblock %}
+{% block table_statistical %}
+    <div class="section-body">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center ">
+                    <div class="header-action">
+                        <h1 class="page-title">信息流统计板</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-body mt-4">
+            <div class="container-fluid">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="TaskBoard-all">
+                        <div class="table-responsive">
+                            <table class="table-vcenter mb-0 table_custom spacing8 text-nowrap my_table">
+                            <tbody>
+                                <tr>
+                                    <th rowspan="3">日期</th>
+                                    <th rowspan="2" colspan="2" style="text-align: center;vertical-align: center;">标记</th>
+                                    <th colspan="8" style="text-align: center;vertical-align: center">汇总</th>
+                                    {% for k,v in channel.items %}
+                                        <th colspan="8" style="text-align: center;vertical-align: center">{{ v }}</th>
+                                    {% endfor %}
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="text-align: center;vertical-align: center">种植</td>
+                                    <td colspan="4" style="text-align: center;vertical-align: center">其他</td>
+                                    {% for i in channel %}
+                                        <td colspan="4" style="text-align: center;vertical-align: center">种植</td>
+                                        <td colspan="4" style="text-align: center;vertical-align: center">其他</td>
+                                    {% endfor %}
+                                </tr>
+                                <tr>
+                                    <td >无效</td>
+                                    <td >重复</td>
+                                    <td >表单</td>
+                                    <td >有效</td>
+                                    <td >预约</td>
+                                    <td >到院</td>
+                                    <td >表单</td>
+                                    <td >有效</td>
+                                    <td >预约</td>
+                                    <td >到院</td>
+                                    {% for i in channel %}
+                                        <td >表单</td>
+                                        <td >有效</td>
+                                        <td >预约</td>
+                                        <td >到院</td>
+                                        <td >表单</td>
+                                        <td >有效</td>
+                                        <td >预约</td>
+                                        <td >到院</td>
+                                    {% endfor %}
+                                </tr>
+                                {% load distribute_filters %}
+                                {% for k,v in mouth_info_hz.items %}
+                                    <tr>
+                                        <td>{{ k }}</td>
+                                        <td>{{ v.no_active }}</td>
+                                        <td>{{ v.re_form }}</td>
+                                        {% for x,y in v.hz.items %}
+                                            {% for i in y %}
+                                                <td>{{ i }}</td>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {% for x,y in channel.items %}
+                                            {% with date_data=mouth_info_data|get_date_info:k %}
+                                                {% if x in date_data %}
+                                                    {% with channel_data=x|get_channel_info:date_data %}
+                                                        {% for m,n in channel_data.items %}
+                                                            {% for i in n %}
+                                                                <td>{{ i }}</td>
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                {% else %}
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="section-body">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center ">
+                    <div class="header-action">
+                        <h1 class="page-title">商务通统计板</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-body mt-4">
+            <div class="container-fluid">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="TaskBoard-all">
+                        <div class="table-responsive">
+                            <table class="table-vcenter mb-0 table_custom spacing8 text-nowrap my_table">
+                            <tbody>
+                                <tr>
+                                    <th rowspan="2">日期</th>
+                                    <th colspan="6" style="text-align: center;vertical-align: center;">种植汇总</th>
+                                    <th colspan="6" style="text-align: center;vertical-align: center;">其他汇总</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">预约</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">到院</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">种植</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">矫正</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">贴面</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">小项目</th>
+                                </tr>
+                                <tr>
+                                    <td>总对话</td>
+                                    <td>总有效对话</td>
+                                    <td>总留联</td>
+                                    <td>有效留联</td>
+                                    <td>总预约</td>
+                                    <td>总到院</td>
+                                    <td>总对话</td>
+                                    <td>总有效对话</td>
+                                    <td>总留联</td>
+                                    <td>有效留联</td>
+                                    <td>总预约</td>
+                                    <td>总到院</td>
+                                    <td>种植</td>
+                                    <td>矫正</td>
+                                    <td>洗牙</td>
+                                    <td>全科</td>
+                                    <td>种植</td>
+                                    <td>矫正</td>
+                                    <td>洗牙</td>
+                                    <td>全科</td>
+                                    <td>对话</td>
+                                    <td>有效对话</td>
+                                    <td>留联</td>
+                                    <td>有效留联</td>
+                                    <td>对话</td>
+                                    <td>有效对话</td>
+                                    <td>留联</td>
+                                    <td>有效留联</td>
+                                    <td>对话</td>
+                                    <td>有效对话</td>
+                                    <td>留联</td>
+                                    <td>有效留联</td>
+                                    <td>对话</td>
+                                    <td>有效对话</td>
+                                    <td>留联</td>
+                                    <td>有效留联</td>
+                                </tr>
+                                {% for k,v in mouth_swt_hz.items %}
+                                    <tr>
+                                        <td>{{ k }}</td>
+                                        {% for i in v %}
+                                            <td>{{ i }}</td>
+                                        {% endfor %}
+                                        {% with date_data=mouth_swt_data|get_date_swt:k %}
+                                            {% for i in swt_xm %}
+                                                {% if i in date_data %}
+                                                    {% with xm_data=i|get_xm_swt:date_data %}
+                                                        {% for i in xm_data %}
+                                                            <td>{{ i }}</td>
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                {% else %}
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="section-body">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center ">
+                    <div class="header-action">
+                        <h1 class="page-title">转化率板</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-body mt-4">
+            <div class="container-fluid">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="TaskBoard-all">
+                        <div class="table-responsive">
+                            <table class="table-vcenter mb-0 table_custom spacing8 text-nowrap my_table">
+                            <tbody>
+                                <tr>
+				                    <th rowspan="2">日期</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">种植</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">其他</th>
+                                    <th style="text-align: center;vertical-align: center;">种植到院</th>
+                                    <th style="text-align: center;vertical-align: center;">矫正到院</th>
+                                    <th style="text-align: center;vertical-align: center;">全科到院</th>
+                                    <th style="text-align: center;vertical-align: center;">洗牙到院</th>
+                                    <th style="text-align: center;vertical-align: center;">全部到院</th>
+                                    <th style="text-align: center;vertical-align: center;">营业额</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">种植</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">其他</th>
+                                    <th colspan="4" style="text-align: center;vertical-align: center;">汇总</th>
+                                </tr>
+                                <tr>
+                                    <td>表单</td>
+                                    <td>有效</td>
+                                    <td>预约</td>
+                                    <td>到院</td>
+                                    <td>表单</td>
+                                    <td>有效</td>
+                                    <td>预约</td>
+                                    <td>到院</td>
+                                    <td>数量</td>
+                                    <td>数量</td>
+                                    <td>数量</td>
+                                    <td>数量</td>
+                                    <td>数量</td>
+                                    <td>金额</td>
+                                    <td style="text-align: center;vertical-align: center;">表单有效率</td>
+                                    <td>预约率</td>
+                                    <td style="text-align: center;vertical-align: center;">有效预约率</td>
+                                    <td>到院率</td>
+                                    <td style="text-align: center;vertical-align: center;">表单有效率</td>
+                                    <td>预约率</td>
+                                    <td style="text-align: center;vertical-align: center;">有效预约率</td>
+                                    <td>到院率</td>
+                                    <td style="text-align: center;vertical-align: center;">总有效率</td>
+                                    <td>总预约率</td>
+                                    <td style="text-align: center;vertical-align: center;">总有效预约率</td>
+                                    <td>总到院率</td>
+                                </tr>
+                                {% for k,v in mouth_rate_data.items %}
+                                    <tr>
+                                    <td>{{ k }}</td>
+                                    {% for i in v %}
+                                        <td style="text-align: center;vertical-align: center;">{{ i }}</td>
+                                    {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="section-body">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center ">
+                    <div class="header-action">
+                        <h1 class="page-title">个人上周转化率</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-body mt-4">
+            <div class="container-fluid">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="TaskBoard-all">
+                        <div class="table-responsive">
+                            <table class="table-vcenter mb-0 table_custom spacing8 text-nowrap my_table">
+                            <tbody>
+                                <tr>
+                                    <th style="text-align: center;vertical-align: center;">姓名</th>
+                                    <th style="text-align: center;vertical-align: center;">总表单</th>
+                                    <th style="text-align: center;vertical-align: center;">有效表单</th>
+                                    <th style="text-align: center;vertical-align: center;">到院</th>
+                                    <th style="text-align: center;vertical-align: center;">到院率</th>
+                                </tr>
+                                {% for k,v in week_data.items %}
+                                    <tr>
+                                    <td>{{ k }}</td>
+                                    {% for i in v %}
+                                        <td>{{ i }}</td>
+                                    {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+{% block card_main %}
+    <div class="card">
+        <div class="card-body">
+            <div>本月种植有效表单量</div>
+            <div class="py-3 m-0 text-center h1 text-success">{{ frame_data.zz_active }}</div>
+        </div>
+        <div class="card-body">
+            <div>本月其他有效表单量</div>
+            <div class="py-3 m-0 text-center h1 text-success">{{ frame_data.another_active }}</div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block card_add %}
+    <div class="card">
+        <div class="card-body top_counter">
+            <div class="icon bg-yellow"><i class="fa fa-users"></i> </div>
+            <div class="content">
+                <span>表单有效率</span>
+                <h5 class="number mb-0">{{ frame_data.form_active_rate }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body top_counter">
+            <div class="icon bg-yellow"><i class="fa fa-users"></i> </div>
+            <div class="content">
+                <span>表单预约率</span>
+                <h5 class="number mb-0">{{ frame_data.order_rate }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body top_counter">
+            <div class="icon bg-yellow"><i class="fa fa-users"></i> </div>
+            <div class="content">
+                <span>表单到院率</span>
+                <h5 class="number mb-0">{{ frame_data.arrive_rate }}</h5>
+            </div>
+        </div>
+    </div>
+{% endblock %}

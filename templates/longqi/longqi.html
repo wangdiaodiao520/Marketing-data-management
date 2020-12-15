@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}表单分发{% endblock %}
+{% block right_frame_add %}
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#righttab-Result">详情</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#righttab-Students">人员</a></li>
+{% endblock %}
+{% block card_main %}
+    <div class="card">
+        <div class="card-body">
+            <div>未分配表单量</div>
+            <div class="py-3 m-0 text-center h1 text-success">{{ form }}</div>
+        </div>
+        <div class="card-footer">
+            <ul class="list-unstyled mb-0">
+                <li class="mb-3">
+                    <div class="clearfix">
+                        <div class="float-left"><strong>{{ turnover }}</strong></div>
+                        <div class="float-right"><small class="text-muted">本月营业额</small></div>
+                    </div>
+                    <div class="progress progress-xxs">
+                        <div class="progress-bar bg-azure" role="progressbar" style="width: 87%" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+{% block card_add %}
+    <div class="card">
+        <div class="card-body top_counter">
+            <div class="icon bg-yellow"><i class="fa fa-users"></i> </div>
+            <div class="content">
+                <a href="/show_today_form/"><span>今日分配</span></a>
+                <h5 class="number mb-0">{{ distribute_today }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body top_counter">
+            <div class="icon bg-yellow"><i class="fa fa-users"></i> </div>
+            <div class="content">
+                <span>今日咨询</span>
+                <h5 class="number mb-0">{{ consult_today }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body top_counter">
+            <div class="icon bg-yellow"><i class="fa fa-users"></i> </div>
+            <div class="content">
+                <span>有效表单</span>
+                <h5 class="number mb-0">{{ active_today }}</h5>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block right_frame_add_info %}
+    {% for k,v in sale_form.items %}
+        <div class="card">
+            <div class="card-header">
+                <a href="#">
+                    <h3 class="card-title">{{ k }}：{{ v.all }}</h3>
+                </a>
+            </div>
+            <div class="card-footer">
+                <div class="row text-center">
+                    <div class="col-6 border-right">
+                        <label class="mb-0">已咨询</label>
+                        <div class="font-20 font-weight-bold">{{ v.suc }}</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="mb-0">未咨询</label>
+                        <div class="font-20 font-weight-bold">{{ v.fal }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block right_frame_add_user %}
+    <div id="users">
+        <div class="input-group mt-2 mb-2">
+            <input type="text" class="form-control search" placeholder="搜索咨询人">
+        </div>
+        <ul class="right_chat list-unstyled list">
+            {% for k,v in consultant.items %}
+                <li>
+                    <a href="{% url "sale_statistical" k %}" class="media">
+                        <img class="media-object" src="{% static 'fonts/gqbb.jpg' %}" alt="">
+                        <div class="media-body">
+                            <span class="name">{{ v }}</span>
+                            <span class="message">咨询部</span>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+{% block left_frame_add %}
+    <li><a href="/mouth_statistical/"><i class="fa fa-credit-card"></i><span>月统计表</span></a></li>
+    <li><a href="/search_phone/"><i class="fa fa-credit-card"></i><span>手机号查询</span></a></li>
+    <li><a href="/all_no_consult/"><i class="fa fa-credit-card"></i><span>未咨询表单</span></a></li>
+    <li><a href="/all_no_line/"><i class="fa fa-credit-card"></i><span>未联系上表单</span></a></li>
+    <li><a href="/handle/"><i class="fa fa-credit-card"></i><span>表单质量</span></a></li>
+    <li><a href="/get_charts/"><i class="fa fa-credit-card"></i><span>可视化</span></a></li>
+    <li><a href="/up_turnover_page/"><i class="fa fa-credit-card"></i><span>上传营业额</span></a></li>
+    <li><a href="/up_order_page/"><i class="fa fa-credit-card"></i><span>上传预约</span></a></li>
+    <li><a href="/up_arrive_page/"><i class="fa fa-credit-card"></i><span>上传到院</span></a></li>
+    <li><a href="/index/"><i class="fa fa-credit-card"></i><span>回到主页</span></a></li>
+{% endblock %}
+{% block page_title %}
+    <h1 class="page-title">待分发表单</h1>
+{% endblock %}
+{% block meter %}
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h6>当日完成率</h6>
+                <input type="text" class="knob" value={{ complete_rate }} data-width="90" data-height="90" data-thickness="0.1" data-fgColor="#2185d0" readonly="readonly">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h6>当日有效率</h6>
+                <input type="text" class="knob" value={{ active_rate }} data-width="90" data-height="90" data-thickness="0.1" data-fgColor="#f2711c" readonly="readonly">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block table %}
+    <table class="table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>任务</th>
+                <th>人员</th>
+                <th>数量</th>
+                <th>分配</th>
+            </tr>
+        </thead>
+    </table>
+    {% for k,v in form_data.items %}
+        <form method="POST" action="/distribute_form/">
+        <table class="table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap">
+            <tr>
+                <td>#</td>
+                <td  width="350">
+                    <a><h6>{{ v.name }}</h6></a>
+                    <!-- <a href="{}"><h6>{}</h6></a> -->
+                    <span>剩余{{ v.num }}条未分配</span>
+                </td>
+                <td>
+                    <select style="padding: 5px;background: transparent;border-radius: 10px" name="consult" >
+                        <option  value='' style="display: none;">咨询人</option>
+                        {% for m,n in consultant.items %}
+                        <option value={{ m }}>{{ n }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <input style="padding: 5px;background: transparent;border-radius: 10px" required="required" name="form_num">
+                </td>
+                <td>
+                    <button style="padding: 5px;background: transparent;border-radius: 10px" name="channel" value={{ k }}>分配</button>
+                </td>
+             </tr>
+        </table>
+        </form>
+    {% endfor %}
+{% endblock %}
+{% block serch %}
+     <form class="input-group" method="post" action="/search_phone_local/" style="width: 300px">
+        <input class="form-control" name="phone" placeholder="手机号">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary">
+                <font style="vertical-align: inherit;">搜索</font></font>
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

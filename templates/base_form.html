@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}表单{% endblock %}
+{% block left_frame_add %}
+    <li><a href="/index/"><i class="fa fa-credit-card"></i><span>回到主页</span></a></li>
+{% endblock %}
+{% block serch %}
+    <div class="input-group" style="width: 300px">
+        <input type="text" class="form-control" id="txt" placeholder="您想找到什么">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" id="btn">
+                <font style="vertical-align: inherit;">搜索</font></font>
+            </button>
+        </div>
+    </div>
+    <script>
+    $(function () {
+        $("#btn").click(function () {
+            var $sea=$('#txt').val();
+            //先隐藏全部，再把符合筛选条件的值显示
+            $('table tbody tr').hide().filter(':contains('+$sea+')').show();
+        });
+    });
+    </script>
+{% endblock %}
+{% block card_main %}
+    {% for k,v in sale_no_line_num.items %}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">{{ k }}：</h3>
+
+                <div class="font-20 font-weight-bold">{{ v }}</div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block table %}
+    <table class="table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap">
+        <thead>
+            <tr>
+                <th>渠道</th>
+                <th>咨询人</th>
+                <th>手机号</th>
+                <th>有效性</th>
+                {% if request.session.user_limit == 2 %}
+                <th>用户提交时间</th>
+                {% else %}
+                <th>分配时间</th>
+                {% endif %}
+                <th>提交</th>
+            </tr>
+        </thead>
+    {% for i in form %}
+        <tr>
+            {% if request.session.user_limit != 2 %}
+            <form method="POST" action="/submit_result/" target="iframe_data">
+            {% else %}
+            <form method="POST" action="/delete_form/" target="iframe_data">
+            {% endif %}
+            <td width="80">{{ i.channel }}</td>
+            <td width="200"><a>{{ i.name }}</a></td>
+            <td width="200"><a>{{ i.phone }}</a></td>
+            <td>
+                <select style="padding: 5px;background: transparent;border-radius: 10px;background-color:limegreen" name="active" >
+                    <option style="display: none">{{ i.active }}</option>
+
+                    <optgroup label="数据有效">
+                        <option value=1>有效</option>
+                    </optgroup>
+                    <optgroup label="数据无效">
+                        <option value=2>表单错误</option>
+                        <option value=3>外地</option>
+                        <option value=4>无效客户</option>
+                    </optgroup>
+                    <optgroup label="数据重复">
+                        <option value=10>本部门</option>
+                        <option value=11>其他部门</option>
+                    </optgroup>
+                    <option value=16>未联系上</option>
+                </select>
+            </td>
+            {% if request.session.user_limit == 2 %}
+            <td>{{ i.submit_time }}</td>
+            {% else %}
+            <td>{{ i.distribute_time }}</td>
+            {% endif %}
+            {% if request.session.user_limit != 2 %}
+            <td><button style="padding: 5px;background: transparent;border-radius: 10px" name="form_id" value={{ i.id }}>确认</button></td>
+            {% else %}
+            <td><button style="padding: 5px;background: transparent;border-radius: 10px" name="form_id" value={{ i.id }}>删除</button></td>
+            {% endif %}
+            </form>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

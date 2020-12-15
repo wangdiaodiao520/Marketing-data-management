@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}手机号查询{% endblock %}
+{% block left_frame_add %}
+    <li><a href="/index/"><i class="fa fa-credit-card"></i><span>回到主页</span></a></li>
+{% endblock %}
+{% block serch %}
+    <!---action="/get_phone_result/--->
+    <form class="input-group" method="post" action="/#/" style="width: 300px">
+        <input type="text" class="form-control" placeholder="您想找到什么">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">
+                <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">搜索</font></font>
+            </button>
+        </div>
+    </form>
+{% endblock %}
+{% block table %}
+    <table class="table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap">
+        <tr><td><h1 class="page-title">最后就诊查询</h1></td></tr>
+    {% for k, v in jz.items %}
+        <tr>
+        <td>{{ k }}</td>
+        <td>{{ v }}</td>
+        </tr>
+    {% endfor %}
+    <tr><td><h1 class="page-title">最后咨询查询</h1></td></tr>
+    {% for k, v in zx.items %}
+        <tr>
+        <td>{{ k }}</td>
+        <td>{{ v }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>{% block title %}{% endblock %}</title>
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.min.css' %}" >
+<script src="{% static 'js/lib.vendor.bundle.js' %}"></script>
+<script src="{% static 'js/knobjs.bundle.js' %}"></script>
+<script src="{% static 'js/knobjs.js' %}"></script>
+<script src="{% static 'js/core.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/style.min.css' %}" >
+<style type="text/css">
+    .my_table
+    {
+        border-collapse: collapse;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .my_table th:nth-child(1){
+        width: 100px;
+    }
+    .my_table td, table th
+    {
+        border: 1px solid black;
+        color: black;
+    }
+    tr:hover{
+        background-color: #ffff00;
+    }
+    .my_table tr:hover td:nth-child(4){
+        background-color: #ff0000;
+        color: #ffff00;
+    }
+    .my_table tr:hover td:nth-child(8){
+        background-color:#ff0000;
+        color:  #ffff00;
+    }
+</style>
+{% block dis %}{% endblock %}
+</head>
+<body class="font-muli theme-cyan gradient">
+{% spaceless %}
+<div id="main_content">
+    <div class="user_div">
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#righttab-statistics">统计</a></li>
+            <!--右信息显示栏条目-->
+            {% block right_frame_add %}{% endblock %}
+        </ul>
+        <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="righttab-statistics" role="tabpanel">
+                <!--右信息显示栏主页内容-->
+                {% block card_main %}{% endblock %}
+                 <!--右信息显示栏主页内容card-->
+                {% block card_add %}{% endblock %}
+            </div>
+            <div class="tab-pane fade" id="righttab-Result" role="tabpanel">
+                <!--右信息显示栏分配详情页内容-->
+                {% block right_frame_add_info %}{% endblock %}
+            </div>
+            <div class="tab-pane fade" id="righttab-Students" role="tabpanel">
+                <!--右信息显示栏人员页内容-->
+                {% block right_frame_add_user %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="left-sidebar" class="sidebar">
+    <h5 class="brand-name">牙管家</h5>
+    <ul class="nav nav-tabs">
+        <li class="nav-item"><a class="nav-link" data-toggle="tab">表单</a></li>
+    </ul>
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="menu-admin" role="tabpanel">
+            <nav class="sidebar-nav">
+                <ul class="metismenu">
+                    <!--左信息栏超链接条目-->
+                    {% block left_frame_add %}{% endblock %}
+                    <section>
+                        <div>
+                            <textarea id="chat-log" rows="20" disabled style="padding: 1px;border-radius: 5px;height: 199px"></textarea><br/>
+                            {% if request.session.user_limit >= 9 %}
+                            <input style="padding: 3px;background: transparent;border-radius: 3px" id="chat-message-input" type="text"/><br/>
+                            <input class="btn btn-outline-secondary" id="chat-message-submit" type="button" value="发送"/>
+                            {% endif %}
+                        </div>
+                    </section>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="page">
+    <div class="section-body" id="page_top" >
+        <div class="container-fluid">
+            <div class="page-header">
+                <div class="left" style="width: 80%">
+                        {% block add_work %}{% endblock %}
+                        <!--搜索框-->
+                        {% block serch %}{% endblock %}
+                </div>
+                <div class="right">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="user_name">{{ request.session.user_name }}</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/logout/">退出</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section-body">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center ">
+                <div class="header-action">
+                    {% block page_title %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block table_statistical %}{% endblock %}
+    <div class="section-body mt-4">
+        <div class="container-fluid">
+            <div class="tab-content">
+                <div class="tab-pane active" id="TaskBoard-all">
+                    <div class="row clearfix mt-2">
+                        <!--仪表显示-->
+                        {% block meter %}{% endblock %}
+
+                    </div>
+                    <div class="table-responsive" id="table">
+                        <!--表格-->
+                        {% block table %}{% endblock %}
+                        <br>
+                        <br>
+                        {{ turnover_time_bar|safe }}
+                        {{ form_quality_bar_|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<iframe id="pi_swt" name="iframe_data" style="display:none;">看不到我</iframe>
+{% block js %}{% endblock %}
+<script>
+    var txt = '--------message--------' +'\n'+ '{{ request.session.top_info }}';
+    document.getElementById('chat-log').value=txt;
+</script>
+<script>
+        var chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat');
+
+        chatSocket.onmessage = function (e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            console.log(message);
+            var datamsg=$('#chat-log').val()+message+'\n';
+            $('#chat-log').val(datamsg);
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+        $('#chat-message-submit').click(function () {
+            if (chatSocket.readyState === 1) {
+                var name = '{{ request.session.user_name }}'
+                /*
+                if(name=='张宇晴'){
+                    var name = '憨憨';
+                };*/
+                var message = $('#chat-message-input').val()
+                chatSocket.send(JSON.stringify({
+                    'message': name+'：'+message
+                }));
+                $('#chat-message-input').val("")
+            } else {
+                console.log("还没有连接")
+            }
+        })
+</script>
+{% if messages %}
+    <script>
+        {% for msg in messages %}
+            alert('{{ msg.message }}');
+        {% endfor %}
+    </script>
+{% endif %}
+{% endspaceless %}
+</body>
+</html>

@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}表单质量{% endblock %}
+{% block right_frame_add %}
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#righttab-Students">渠道</a></li>
+{% endblock %}
+{% block card_main %}
+    <div class="card">
+        <div class="card-footer">
+            <ul class="list-unstyled mb-0">
+                <li class="mb-3">
+                    <div class="clearfix">
+                        <div class="float-left"><strong>{{ no_distribute }}</strong></div>
+                        <div class="float-right"><small class="text-muted">未分配</small></div>
+                    </div>
+                    <div class="progress progress-xxs">
+                        <div class="progress-bar bg-azure" role="progressbar" style="width: 87%" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="clearfix">
+                        <div class="float-left"><strong>{{ no_consult }}</strong></div>
+                        <div class="float-right"><small class="text-muted">未咨询</small></div>
+                    </div>
+                    <div class="progress progress-xxs">
+                        <div class="progress-bar bg-azure" role="progressbar" style="width: 87%" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </li>
+                <li class="mb-3">
+                    <div class="clearfix">
+                        <div class="float-left"><strong>{{ up_num_today }}</strong></div>
+                        <div class="float-right"><small class="text-muted"><a href="/get_today_form/">当日上传</a></small></div>
+                    </div>
+                    <div class="progress progress-xxs">
+                        <div class="progress-bar bg-azure" role="progressbar" style="width: 87%" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+{% block right_frame_add_user %}
+    <div id="users">
+        <div class="input-group mt-2 mb-2">
+            <input type="text" class="form-control search" placeholder="Search Channel">
+        </div>
+        <ul class="right_chat list-unstyled list">
+            {% for k,v in channel.items %}
+            <li>
+                <a href="#" class="media">
+                    <div class="media-body">
+                        <span class="name">{{ v }}</span>
+                    </div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+{% block left_frame_add %}
+    <li><a  href="/mouth_statistical/"><i class="fa fa-credit-card"></i><span>月度统计</span></a></li>
+    <li><a  href="/distribute/"><i class="fa fa-credit-card"></i><span>分配任务</span></a></li>
+    <li><a  href="#"><i class="fa fa-credit-card"></i><span>营业额报表</span></a></li>
+    <li><a href="/get_charts/"><i class="fa fa-credit-card"></i><span>可视化</span></a></li>
+    <li><a  href="/up_load/"><i class="fa fa-credit-card"></i><span>上传数据</span></a></li>
+    <li><a href="/index/"><i class="fa fa-credit-card"></i><span>回到主页</span></a></li>
+{% endblock %}
+{% block serch %}
+     <form method="post" action="/form_quality/" class="input-group" style="width: 800px">
+         <input class="form-control" name="start" type="date">
+         <input class="form-control" name="end" type="date" required="required">
+         <select class="form-control" name="time_class" >
+             <option value=1 selected="selected">用户日期</option>
+             <option value=0>上传日期</option>
+         </select>
+         <button class="btn btn-outline-secondary">查询</button>
+     </form>
+     <form method="post" action="/search_phone_local/" class="input-group" style="width: 300px">
+         <input class="form-control" name="phone" placeholder="手机号">
+         <button class="btn btn-outline-secondary">表单查询</button>
+      </form>
+{% endblock %}
+{% block page_title %}
+    <h1 class="page-title">{{ t }}-表单质量统计</h1>
+{% endblock %}
+{% block meter %}
+    {% for k,v in form_quality_rate.items %}
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h6>{{ k }}</h6>
+                <input type="text" class="knob" value={{ v }} data-width="90" data-height="90" data-thickness="0.1" data-fgColor="#2185d0" readonly="readonly">
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
+{% block table %}
+    <table class="table table-hover table-vcenter mb-0 table_custom spacing8 text-nowrap">
+        <thead>
+            <tr>
+                <th>渠道</th>
+                <th>总量</th>
+                <th>已分配</th>
+                <th>已咨询</th>
+                <th>有效</th>
+                <th>无效-表单</th>
+                <th>无效-外地</th>
+                <th>无效-客户</th>
+                <th>重复-本部门</th>
+                <th>重复-其它部门</th>
+                <th>未联系上</th>
+            </tr>
+        </thead>
+        {% for k,v in form_quality_data.items %}
+            <tr>
+                {% if '汇总' not in k %}
+                <td>{{ k }}</td>
+                <td>{{ v.0 }}</td>
+                <td>{{ v.1 }}</td>
+                <td>{{ v.2 }}</td>
+                <td><a href="{% url "get_actives_form" t_ 1 '&' k %}">{{ v.3 }}</a></td>
+                <td><a href="{% url "get_actives_form" t_ 2 '&' k %}">{{ v.4 }}</a></td>
+                <td><a href="{% url "get_actives_form" t_ 3 '&' k %}">{{ v.5 }}</a></td>
+                <td><a href="{% url "get_actives_form" t_ 4 '&' k %}">{{ v.6 }}</a></td>
+                <td><a href="{% url "get_actives_form" t_ 10 '&' k %}">{{ v.7 }}</a></td>
+                <td><a href="{% url "get_actives_form" t_ 11 '&' k %}">{{ v.8 }}</a></td>
+                <td><a href="{% url "get_actives_form" t_ 16 '&' k %}">{{ v.9 }}</a></td>
+                {% else %}
+                <td>{{ k }}</td>
+                <td>{{ v.0 }}</td>
+                <td>{{ v.1 }}</td>
+                <td>{{ v.2 }}</td>
+                <td>{{ v.3 }}</td>
+                <td>{{ v.4 }}</td>
+                <td>{{ v.5 }}</td>
+                <td>{{ v.6 }}</td>
+                <td>{{ v.7 }}</td>
+                <td>{{ v.8 }}</td>
+                <td>{{ v.9 }}</td>
+                {% endif %}
+             </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
